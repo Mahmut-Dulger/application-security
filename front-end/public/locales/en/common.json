@@ -1,0 +1,28 @@
+{
+  "app.title": "Out Of Office App",
+  "general.error": "An error has occurred. Please try again later.",
+  "header": {
+    "welcome": "Welcome",
+    "nav": {
+      "home": "Home",
+      "trips": "Trips",
+      "experiences": "Experiences",
+      "login": "Login",
+      "logout": "Logout"
+    }
+  },
+  "login": {
+    "title": "Login",
+    "button": "Login",
+    "success": "Login succesful. Redirecting to homepage...",
+    "validate": {
+      "emailRequired": "Email is required",
+      "password": "Password is required"
+    },
+    "label": { "email": "Email:", "password": "Password:" }
+  },
+  "home": {
+    "title": "Time for a holiday!",
+    "description": "Out of Office is your gateway to unforgettable experiences! Discover amazing trips to beautiful destinations and join exciting experiences in your area. Whether you're looking for a weekend getaway, a cultural adventure, or a fun social gathering, our platform connects you with organizers who create memorable experiences. Browse upcoming trips, book your spot at local experiences, and start planning your next adventure today!"
+  }
+}

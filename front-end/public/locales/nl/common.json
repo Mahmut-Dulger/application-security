@@ -1,0 +1,28 @@
+{
+  "app.title": "Out Of Office App",
+  "general.error": "Er is een fout opgetreden. Probeer het later opnieuw.",
+  "header": {
+    "welcome": "Welkom",
+    "nav": {
+      "home": "Startpagina",
+      "trips": "Reizen",
+      "experiences": "Ervaringen",
+      "login": "Inloggen",
+      "logout": "Uitloggen"
+    }
+  },
+  "login": {
+    "title": "Inloggen",
+    "button": "Inloggen",
+    "success": "Inloggen succesvol. Doorverwijzen naar startpagina...",
+    "validate": {
+      "emailRequired": "E-mail is verplicht",
+      "password": "Wachtwoord is verplicht"
+    },
+    "label": { "email": "E-mail:", "password": "Wachtwoord:" }
+  },
+  "home": {
+    "title": "Tijd voor een vakantie!",
+    "description": "Out of Office is jouw toegangspoort tot onvergetelijke ervaringen! Ontdek geweldige reizen naar prachtige bestemmingen en doe mee aan spannende ervaringen in jouw omgeving. Of je nu op zoek bent naar een weekendje weg, een cultureel avontuur, of een leuke sociale bijeenkomst, ons platform verbindt je met organisatoren die gedenkwaardige ervaringen creëren. Blader door aankomende reizen, boek je plek bij lokale ervaringen, en begin vandaag nog met het plannen van jouw volgende avontuur!"
+  }
+}
