@@ -16,8 +16,28 @@ app.use(helmet());
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
+            // Set default-src as fallback
+            defaultSrc: ["'none'"],
             // Allow connections to own server and the external API
             connectSrc: ["'self'", 'https://api.ucll.be'],
+            // Control JavaScript sources
+            scriptSrc: ["'self'"],
+            // Control CSS sources
+            styleSrc: ["'self'"],
+            // Control image sources
+            imgSrc: ["'self'"],
+            // Control font sources
+            fontSrc: ["'self'"],
+            // Restrict frame embedding
+            frameSrc: ["'none'"],
+            // Block plugins
+            objectSrc: ["'none'"],
+            // Prevent clickjacking
+            frameAncestors: ["'none'"],
+            // Form submissions only to same origin
+            formAction: ["'self'"],
+            // Set upgradeInsecureRequests directive
+            upgradeInsecureRequests: []
         },
     })
 );
@@ -91,3 +111,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 app.listen(port || 3000, () => {
     console.log(`Travel Booking API is running on port ${port}.`);
 });
+
