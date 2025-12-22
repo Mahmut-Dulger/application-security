@@ -1,0 +1,204 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "js-yaml": {
+      "name": "js-yaml",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109801,
+          "name": "js-yaml",
+          "dependency": "js-yaml",
+          "title": "js-yaml has prototype pollution in merge (<<)",
+          "url": "https://github.com/advisories/GHSA-mh29-5h37-fv8m",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<3.14.2"
+        },
+        {
+          "source": 1109802,
+          "name": "js-yaml",
+          "dependency": "js-yaml",
+          "title": "js-yaml has prototype pollution in merge (<<)",
+          "url": "https://github.com/advisories/GHSA-mh29-5h37-fv8m",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": ">=4.0.0 <4.1.1"
+        }
+      ],
+      "effects": [],
+      "range": "<3.14.2 || >=4.0.0 <4.1.1",
+      "nodes": [
+        "node_modules/@apidevtools/json-schema-ref-parser/node_modules/js-yaml",
+        "node_modules/js-yaml"
+      ],
+      "fixAvailable": true
+    },
+    "jws": {
+      "name": "jws",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1111244,
+          "name": "jws",
+          "dependency": "jws",
+          "title": "auth0/node-jws Improperly Verifies HMAC Signature",
+          "url": "https://github.com/advisories/GHSA-869p-cjfg-cm3x",
+          "severity": "high",
+          "cwe": [
+            "CWE-347"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<3.2.3"
+        }
+      ],
+      "effects": [],
+      "range": "<3.2.3",
+      "nodes": [
+        "node_modules/jws"
+      ],
+      "fixAvailable": true
+    },
+    "nodemon": {
+      "name": "nodemon",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "simple-update-notifier"
+      ],
+      "effects": [],
+      "range": "2.0.19 - 2.0.22",
+      "nodes": [
+        "node_modules/nodemon"
+      ],
+      "fixAvailable": true
+    },
+    "semver": {
+      "name": "semver",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1101088,
+          "name": "semver",
+          "dependency": "semver",
+          "title": "semver vulnerable to Regular Expression Denial of Service",
+          "url": "https://github.com/advisories/GHSA-c2qf-rxjj-qqgw",
+          "severity": "high",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=7.0.0 <7.5.2"
+        }
+      ],
+      "effects": [
+        "simple-update-notifier"
+      ],
+      "range": "7.0.0 - 7.5.1",
+      "nodes": [
+        "node_modules/simple-update-notifier/node_modules/semver"
+      ],
+      "fixAvailable": true
+    },
+    "simple-update-notifier": {
+      "name": "simple-update-notifier",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "semver"
+      ],
+      "effects": [
+        "nodemon"
+      ],
+      "range": "1.0.7 - 1.1.0",
+      "nodes": [
+        "node_modules/simple-update-notifier"
+      ],
+      "fixAvailable": true
+    },
+    "validator": {
+      "name": "validator",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109241,
+          "name": "validator",
+          "dependency": "validator",
+          "title": "validator.js has a URL validation bypass vulnerability in its isURL function",
+          "url": "https://github.com/advisories/GHSA-9965-vmph-33xx",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-79"
+          ],
+          "cvss": {
+            "score": 6.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+          },
+          "range": "<13.15.20"
+        },
+        {
+          "source": 1111154,
+          "name": "validator",
+          "dependency": "validator",
+          "title": "Validator is Vulnerable to Incomplete Filtering of One or More Instances of Special Elements",
+          "url": "https://github.com/advisories/GHSA-vghf-hv5q-vc2g",
+          "severity": "high",
+          "cwe": [
+            "CWE-792"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<13.15.22"
+        }
+      ],
+      "effects": [],
+      "range": "<=13.15.20",
+      "nodes": [
+        "node_modules/validator"
+      ],
+      "fixAvailable": true
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 1,
+      "high": 5,
+      "critical": 0,
+      "total": 6
+    },
+    "dependencies": {
+      "prod": 185,
+      "dev": 309,
+      "optional": 2,
+      "peer": 1,
+      "peerOptional": 0,
+      "total": 495
+    }
+  }
+}

@@ -1,0 +1,432 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@jest/transform": {
+      "name": "@jest/transform",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "jest-haste-map"
+      ],
+      "effects": [
+        "babel-jest"
+      ],
+      "range": "<=26.6.2",
+      "nodes": [
+        "node_modules/@jest/transform"
+      ],
+      "fixAvailable": {
+        "name": "esbuild-jest",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "anymatch": {
+      "name": "anymatch",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "micromatch"
+      ],
+      "effects": [
+        "sane"
+      ],
+      "range": "1.2.0 - 2.0.0",
+      "nodes": [
+        "node_modules/sane/node_modules/anymatch"
+      ],
+      "fixAvailable": {
+        "name": "esbuild-jest",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "babel-jest": {
+      "name": "babel-jest",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@jest/transform"
+      ],
+      "effects": [
+        "esbuild-jest"
+      ],
+      "range": "24.2.0-alpha.0 - 26.6.3",
+      "nodes": [
+        "node_modules/babel-jest"
+      ],
+      "fixAvailable": {
+        "name": "esbuild-jest",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "braces": {
+      "name": "braces",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1098094,
+          "name": "braces",
+          "dependency": "braces",
+          "title": "Uncontrolled resource consumption in braces",
+          "url": "https://github.com/advisories/GHSA-grv7-fg5c-xmjg",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-1050"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<3.0.3"
+        }
+      ],
+      "effects": [
+        "micromatch"
+      ],
+      "range": "<3.0.3",
+      "nodes": [
+        "node_modules/sane/node_modules/braces"
+      ],
+      "fixAvailable": {
+        "name": "esbuild-jest",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "esbuild": {
+      "name": "esbuild",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1102341,
+          "name": "esbuild",
+          "dependency": "esbuild",
+          "title": "esbuild enables any website to send any requests to the development server and read the response",
+          "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-346"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N"
+          },
+          "range": "<=0.24.2"
+        }
+      ],
+      "effects": [],
+      "range": "<=0.24.2",
+      "nodes": [
+        "node_modules/esbuild"
+      ],
+      "fixAvailable": {
+        "name": "esbuild",
+        "version": "0.27.2",
+        "isSemVerMajor": true
+      }
+    },
+    "esbuild-jest": {
+      "name": "esbuild-jest",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "babel-jest"
+      ],
+      "effects": [],
+      "range": ">=0.5.0-beta.1",
+      "nodes": [
+        "node_modules/esbuild-jest"
+      ],
+      "fixAvailable": {
+        "name": "esbuild-jest",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "form-data": {
+      "name": "form-data",
+      "severity": "critical",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109538,
+          "name": "form-data",
+          "dependency": "form-data",
+          "title": "form-data uses unsafe random function in form-data for choosing boundary",
+          "url": "https://github.com/advisories/GHSA-fjxv-7rqg-78g4",
+          "severity": "critical",
+          "cwe": [
+            "CWE-330"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=4.0.0 <4.0.4"
+        }
+      ],
+      "effects": [],
+      "range": "4.0.0 - 4.0.3",
+      "nodes": [
+        "node_modules/form-data"
+      ],
+      "fixAvailable": true
+    },
+    "glob": {
+      "name": "glob",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109842,
+          "name": "glob",
+          "dependency": "glob",
+          "title": "glob CLI: Command injection via -c/--cmd executes matches with shell:true",
+          "url": "https://github.com/advisories/GHSA-5j98-mcp5-4vw2",
+          "severity": "high",
+          "cwe": [
+            "CWE-78"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": ">=10.2.0 <10.5.0"
+        }
+      ],
+      "effects": [],
+      "range": "10.2.0 - 10.4.5",
+      "nodes": [
+        "node_modules/glob"
+      ],
+      "fixAvailable": true
+    },
+    "jest-haste-map": {
+      "name": "jest-haste-map",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "sane"
+      ],
+      "effects": [
+        "@jest/transform"
+      ],
+      "range": "24.0.0-alpha.0 - 26.6.2",
+      "nodes": [
+        "node_modules/jest-haste-map"
+      ],
+      "fixAvailable": {
+        "name": "esbuild-jest",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "js-yaml": {
+      "name": "js-yaml",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109801,
+          "name": "js-yaml",
+          "dependency": "js-yaml",
+          "title": "js-yaml has prototype pollution in merge (<<)",
+          "url": "https://github.com/advisories/GHSA-mh29-5h37-fv8m",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<3.14.2"
+        }
+      ],
+      "effects": [],
+      "range": "<3.14.2",
+      "nodes": [
+        "node_modules/js-yaml"
+      ],
+      "fixAvailable": true
+    },
+    "micromatch": {
+      "name": "micromatch",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1098681,
+          "name": "micromatch",
+          "dependency": "micromatch",
+          "title": "Regular Expression Denial of Service (ReDoS) in micromatch",
+          "url": "https://github.com/advisories/GHSA-952p-6rrq-rcjv",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": "<4.0.8"
+        },
+        "braces"
+      ],
+      "effects": [
+        "anymatch",
+        "sane"
+      ],
+      "range": "<=4.0.7",
+      "nodes": [
+        "node_modules/sane/node_modules/micromatch"
+      ],
+      "fixAvailable": {
+        "name": "esbuild-jest",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    },
+    "next": {
+      "name": "next",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        {
+          "source": 1107226,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Affected by Cache Key Confusion for Image Optimization API Routes",
+          "url": "https://github.com/advisories/GHSA-g5qg-72qw-gw5v",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-524"
+          ],
+          "cvss": {
+            "score": 6.2,
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=0.9.9 <14.2.31"
+        },
+        {
+          "source": 1107512,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Improper Middleware Redirect Handling Leads to SSRF",
+          "url": "https://github.com/advisories/GHSA-4342-x723-ch2f",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-918"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:L/A:N"
+          },
+          "range": ">=0.9.9 <14.2.32"
+        },
+        {
+          "source": 1107513,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next.js Content Injection Vulnerability for Image Optimization",
+          "url": "https://github.com/advisories/GHSA-xv57-4mr9-wg8v",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-20"
+          ],
+          "cvss": {
+            "score": 4.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N"
+          },
+          "range": ">=0.9.9 <14.2.31"
+        },
+        {
+          "source": 1111391,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next Vulnerable to Denial of Service with Server Components",
+          "url": "https://github.com/advisories/GHSA-mwv6-3258-q52c",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-502",
+            "CWE-1395"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=13.3.0 <14.2.34"
+        },
+        {
+          "source": 1111461,
+          "name": "next",
+          "dependency": "next",
+          "title": "Next has a Denial of Service with Server Components - Incomplete Fix Follow-Up",
+          "url": "https://github.com/advisories/GHSA-5j59-xgg2-r9c4",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-502",
+            "CWE-1395"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=13.3.1-canary.0 <14.2.35"
+        }
+      ],
+      "effects": [],
+      "range": "0.9.9 - 14.2.34",
+      "nodes": [
+        "node_modules/next"
+      ],
+      "fixAvailable": true
+    },
+    "sane": {
+      "name": "sane",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "anymatch",
+        "micromatch"
+      ],
+      "effects": [
+        "jest-haste-map"
+      ],
+      "range": "1.5.0 - 4.1.0",
+      "nodes": [
+        "node_modules/sane"
+      ],
+      "fixAvailable": {
+        "name": "esbuild-jest",
+        "version": "0.4.0",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 8,
+      "high": 4,
+      "critical": 1,
+      "total": 13
+    },
+    "dependencies": {
+      "prod": 51,
+      "dev": 768,
+      "optional": 36,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 827
+    }
+  }
+}
