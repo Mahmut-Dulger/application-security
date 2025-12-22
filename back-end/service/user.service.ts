@@ -21,7 +21,7 @@ const authenticate = async ({ email, password }: UserInput): Promise<Authenticat
         throw new Error('Incorrect password.');
     }
     return {
-        token: generateJwtToken({ email, isOrganiser: user.getIsOrganiser() }),
+        token: generateJwtToken({ userId: user.getId()!, email, isOrganiser: user.getIsOrganiser() }),
         id: user.getId()!,
         firstName: user.getFirstName(),
         lastName: user.getLastName(),
@@ -29,6 +29,12 @@ const authenticate = async ({ email, password }: UserInput): Promise<Authenticat
     };
 };
 
+const getUserById = async ({ id }: { id: number }): Promise<User> => {
+    const user = await userDB.getUserById({ id });
+    if (!user) {
+        throw new Error(`User with id: ${id} does not exist.`);
+    }
+    return user;
+};
 
-
-export default { getUserByEmail, authenticate };
+export default { getUserByEmail, getUserById, authenticate };

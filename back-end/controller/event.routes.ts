@@ -221,13 +221,13 @@ eventRouter.post('/', async (req: Request, res: Response, next: NextFunction) =>
         const { name, description, date, location } = req.body;
         const auth = (req as any).auth;
 
-        if (!auth || !auth.email) {
+        if (!auth || !auth.userId) {
             return res.status(401).json({ message: 'Authentication required' });
         }
 
-        // Get user by email from JWT
+        // Get user by ID from JWT (preferred over email)
         const userService = require('../service/user.service').default;
-        const user = await userService.getUserByEmail({ email: auth.email });
+        const user = await userService.getUserById({ id: auth.userId });
 
         if (!user || !user.getIsOrganiser()) {
             return res.status(401).json({ message: 'Only organisers can create experiences' });

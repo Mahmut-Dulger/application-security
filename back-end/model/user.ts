@@ -45,8 +45,17 @@ export class User {
         if (!user.password?.trim()) {
             throw new Error('Password is required');
         }
-        if (user.password.length < 6) {
-            throw new Error('Password must be at least 6 characters long');
+        if (user.password.length < 12) {
+            throw new Error('Password must be at least 12 characters long');
+        }
+        if (!/[A-Z]/.test(user.password)) {
+            throw new Error('Password must contain at least one uppercase letter');
+        }
+        if (!/[0-9]/.test(user.password)) {
+            throw new Error('Password must contain at least one number');
+        }
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(user.password)) {
+            throw new Error('Password must contain at least one special character');
         }
     }
 

@@ -81,10 +81,23 @@
  *              default: false
  */
 import express, { NextFunction, Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import userService from '../service/user.service';
 import { UserInput } from '../types/index';
 
 const userRouter = express.Router();
+
+// Rate limiting for login endpoint - 5 attempts per 15 minutes
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // 5 attempts per IP
+    message: 'Too many login attempts, please try again later',
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// In-memory token blacklist (in production, use Redis or database)
+const tokenBlacklist = new Set<string>();
 
 /**
  * @swagger
@@ -120,7 +133,7 @@ const userRouter = express.Router();
  *                      type: string
  *                      example: "Incorrect password."
  */
-userRouter.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+userRouter.post('/login', loginLimiter, async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userInput = <UserInput>req.body;
         const response = await userService.authenticate(userInput);
@@ -130,4 +143,46 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
     }
 });
 
-export { userRouter };
+/**
+ * @swagger
+ * /users/logout:
+ *   post:
+ *      summary: Logout the current user. Invalidates the JWT token.
+ *      tags:
+ *        - Authentication
+ *      security:
+ *        - bearerAuth: []
+ *      responses:
+ *         200:
+ *            description: Logout successful
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    message:
+ *                      type: string
+ *                      example: "Logged out successfully"
+ *         401:
+ *            description: Unauthorized - Authentication required
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                    status:
+ *                      type: string
+ *                      example: "unauthorized"
+ *                    message:
+ *                      type: string
+ *                      example: "No authorization token was found"
+ */
+userRouter.post('/logout', (req: Request, res: Response) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (token) {
+        tokenBlacklist.add(token);
+    }
+    res.status(200).json({ message: 'Logged out successfully' });
+});
+
+export { userRouter, tokenBlacklist };

@@ -7,7 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import { expressjwt } from 'express-jwt';
 import { tripRouter } from './controller/trip.routes';
 import { eventRouter } from './controller/event.routes';
-import { userRouter } from './controller/user.routes';
+import { userRouter, tokenBlacklist } from './controller/user.routes';
 import helmet from 'helmet';
 
 const app = express();
@@ -44,16 +44,26 @@ app.use(
 
 dotenv.config();
 const port = process.env.APP_PORT || 3000;
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:8080'];
 
-app.use(cors({ origin: 'http://localhost:8080' }));
+app.use(cors({ origin: allowedOrigins }));
 app.use(bodyParser.json());
+
+// Token blacklist middleware - check if token is logged out
+app.use((req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (token && tokenBlacklist.has(token)) {
+        return res.status(401).json({ status: 'unauthorized', message: 'Token has been revoked' });
+    }
+    next();
+});
 
 app.use(
     expressjwt({
         secret: process.env.JWT_SECRET || 'default_secret',
         algorithms: ['HS256'],
     }).unless({
-        path: ['/api-docs', /^\/api-docs\/.*/, '/users/login', '/status', '/trips', /^\/trips\/.*/],
+        path: ['/api-docs', /^\/api-docs\/.*/, '/users/login', '/users/logout', '/status', '/trips', /^\/trips\/.*/],
     })
 );
 
