@@ -178,6 +178,18 @@ const UserLoginForm: React.FC = () => {
             {t("login.button")}
           </button>
         </div>
+        <div className="row mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{" "}
+            <button
+              type="button"
+              onClick={() => router.push("/signup")}
+              className="text-blue-700 hover:underline font-medium"
+            >
+              Sign up here
+            </button>
+          </p>
+        </div>
       </form>
     </div>
   );

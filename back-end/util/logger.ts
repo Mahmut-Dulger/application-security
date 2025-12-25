@@ -97,12 +97,37 @@ export const httpLogger = pinoHttp({
  * Log security events (authentication, authorization, suspicious activity)
  */
 export const logSecurityEvent = (
-    eventType: 'LOGIN' | 'LOGOUT' | 'FAILED_AUTH' | 'UNAUTHORIZED' | 'PRIVILEGE_ESCALATION',
+    eventType: 
+        | 'LOGIN' 
+        | 'LOGOUT' 
+        | 'LOGOUT_ALL_SESSIONS'
+        | 'FAILED_AUTH' 
+        | 'UNAUTHORIZED' 
+        | 'PRIVILEGE_ESCALATION'
+        | 'SIGNUP'
+        | 'SIGNUP_FAILED'
+        | 'EMAIL_VERIFICATION_FAILED'
+        | 'EMAIL_VERIFIED'
+        | 'VERIFICATION_EMAIL_RESENT'
+        | 'LOGIN_FAILED'
+        | 'ACCOUNT_LOCKED'
+        | 'MFA_INITIATED'
+        | 'MFA_VERIFICATION_FAILED'
+        | 'MFA_VERIFIED'
+        | 'PASSWORD_RESET_REQUESTED'
+        | 'PASSWORD_RESET'
+        | 'CHANGE_PASSWORD_FAILED'
+        | 'CHANGE_PASSWORD_MFA_INITIATED'
+        | 'PASSWORD_CHANGED'
+        | 'REMEMBER_ME_TOKEN_CREATED'
+        | 'REMEMBER_ME_LOGIN',
     details: {
         userId?: number;
         email?: string;
         ipAddress?: string;
         reason?: string;
+        attempts?: number;
+        role?: string;
         [key: string]: any;
     }
 ) => {

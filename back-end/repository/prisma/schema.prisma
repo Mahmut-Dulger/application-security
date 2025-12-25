@@ -8,18 +8,49 @@ datasource db {
 }
 
 model User {
-  id                Int      @id @default(autoincrement())
-  firstName         String
-  lastName          String
-  email             String   @unique
-  password          String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  isOrganiser       Boolean  @default(false)
+  id                          Int      @id @default(autoincrement())
+  firstName                   String
+  lastName                    String
+  email                       String   @unique
+  password                    String
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+  isOrganiser                 Boolean  @default(false)
+  
+  // Email verification fields
+  emailVerified               Boolean  @default(false)
+  emailVerificationToken      String?  @unique
+  emailVerificationTokenExp   DateTime?
+  
+  // Password reset fields
+  passwordResetToken          String?  @unique
+  passwordResetTokenExp       DateTime?
+  
+  // Remember me token fields
+  rememberMeTokens            RememberMeToken[]
+  
+  // Account lockout fields (for failed login attempts)
+  failedLoginAttempts         Int      @default(0)
+  lockedUntil                 DateTime?
+  
+  // MFA fields
+  mfaEnabled                  Boolean  @default(false)
+  mfaCode                     String?
+  mfaCodeExp                  DateTime?
+  
   eventsAsOrganiser Event[]  @relation("EventOrganiser")
   tripsAsOrganiser  Trip[]   @relation("TripOrganiser")
   eventsAsClient    Event[]  @relation("EventAttendees")
   tripsAsClient     Trip[]   @relation("TripAttendees")
+}
+
+model RememberMeToken {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token             String   @unique
+  expiresAt         DateTime
+  createdAt         DateTime @default(now())
 }
 
 model Trip {

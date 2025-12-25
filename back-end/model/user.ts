@@ -8,6 +8,24 @@ export class User {
     private password: string;
     private isOrganiser: boolean;
 
+    // Email verification
+    private emailVerified: boolean;
+    private emailVerificationToken?: string;
+    private emailVerificationTokenExp?: Date;
+
+    // Password reset
+    private passwordResetToken?: string;
+    private passwordResetTokenExp?: Date;
+
+    // Account security
+    private failedLoginAttempts: number;
+    private lockedUntil?: Date;
+
+    // MFA
+    private mfaEnabled: boolean;
+    private mfaCode?: string;
+    private mfaCodeExp?: Date;
+
     private createdAt?: Date;
     private updatedAt?: Date;
 
@@ -18,6 +36,16 @@ export class User {
         email: string;
         password: string;
         isOrganiser: boolean;
+        emailVerified?: boolean;
+        emailVerificationToken?: string;
+        emailVerificationTokenExp?: Date;
+        passwordResetToken?: string;
+        passwordResetTokenExp?: Date;
+        failedLoginAttempts?: number;
+        lockedUntil?: Date;
+        mfaEnabled?: boolean;
+        mfaCode?: string;
+        mfaCodeExp?: Date;
         createdAt?: Date;
         updatedAt?: Date;
     }) {
@@ -29,6 +57,16 @@ export class User {
         this.email = user.email;
         this.password = user.password;
         this.isOrganiser = user.isOrganiser;
+        this.emailVerified = user.emailVerified ?? false;
+        this.emailVerificationToken = user.emailVerificationToken;
+        this.emailVerificationTokenExp = user.emailVerificationTokenExp;
+        this.passwordResetToken = user.passwordResetToken;
+        this.passwordResetTokenExp = user.passwordResetTokenExp;
+        this.failedLoginAttempts = user.failedLoginAttempts ?? 0;
+        this.lockedUntil = user.lockedUntil;
+        this.mfaEnabled = user.mfaEnabled ?? false;
+        this.mfaCode = user.mfaCode;
+        this.mfaCodeExp = user.mfaCodeExp;
         this.createdAt = user.createdAt;
         this.updatedAt = user.updatedAt;
     }
@@ -51,6 +89,9 @@ export class User {
         if (!/[A-Z]/.test(user.password)) {
             throw new Error('Password must contain at least one uppercase letter');
         }
+        if (!/[a-z]/.test(user.password)) {
+            throw new Error('Password must contain at least one lowercase letter');
+        }
         if (!/[0-9]/.test(user.password)) {
             throw new Error('Password must contain at least one number');
         }
@@ -59,6 +100,7 @@ export class User {
         }
     }
 
+    // Getters
     getId(): number | undefined {
         return this.id;
     }
@@ -86,12 +128,98 @@ export class User {
     getCreatedAt(): Date | undefined {
         return this.createdAt;
     }
+
     getUpdatedAt(): Date | undefined {
         return this.updatedAt;
     }
 
     getIsOrganiser(): boolean {
         return this.isOrganiser;
+    }
+
+    getEmailVerified(): boolean {
+        return this.emailVerified;
+    }
+
+    getEmailVerificationToken(): string | undefined {
+        return this.emailVerificationToken;
+    }
+
+    getEmailVerificationTokenExp(): Date | undefined {
+        return this.emailVerificationTokenExp;
+    }
+
+    getPasswordResetToken(): string | undefined {
+        return this.passwordResetToken;
+    }
+
+    getPasswordResetTokenExp(): Date | undefined {
+        return this.passwordResetTokenExp;
+    }
+
+    getFailedLoginAttempts(): number {
+        return this.failedLoginAttempts;
+    }
+
+    getLockedUntil(): Date | undefined {
+        return this.lockedUntil;
+    }
+
+    getMfaEnabled(): boolean {
+        return this.mfaEnabled;
+    }
+
+    getMfaCode(): string | undefined {
+        return this.mfaCode;
+    }
+
+    getMfaCodeExp(): Date | undefined {
+        return this.mfaCodeExp;
+    }
+
+    // Setters
+    setEmailVerified(verified: boolean): void {
+        this.emailVerified = verified;
+    }
+
+    setEmailVerificationToken(token: string | undefined, exp: Date | undefined): void {
+        this.emailVerificationToken = token;
+        this.emailVerificationTokenExp = exp;
+    }
+
+    setPasswordResetToken(token: string | undefined, exp: Date | undefined): void {
+        this.passwordResetToken = token;
+        this.passwordResetTokenExp = exp;
+    }
+
+    setPassword(password: string): void {
+        if (!password?.trim()) {
+            throw new Error('Password is required');
+        }
+        this.password = password;
+    }
+
+    setFailedLoginAttempts(attempts: number): void {
+        this.failedLoginAttempts = attempts;
+    }
+
+    setLockedUntil(lockedUntil: Date | undefined): void {
+        this.lockedUntil = lockedUntil;
+    }
+
+    setMfaEnabled(enabled: boolean): void {
+        this.mfaEnabled = enabled;
+    }
+
+    setMfaCode(code: string | undefined, exp: Date | undefined): void {
+        this.mfaCode = code;
+        this.mfaCodeExp = exp;
+    }
+
+    // Helper methods
+    isAccountLocked(): boolean {
+        if (!this.lockedUntil) return false;
+        return new Date() < this.lockedUntil;
     }
 
     equals(other: User): boolean {
@@ -103,16 +231,29 @@ export class User {
             this.id === other.id
         );
     }
-    static from({
-        id,
-        firstName,
-        lastName,
-        email,
-        password,
-        isOrganiser,
-        createdAt,
-        updatedAt,
-    }: UserPrisma): User {
+
+    static from(userObj: any): User {
+        const {
+            id,
+            firstName,
+            lastName,
+            email,
+            password,
+            isOrganiser,
+            emailVerified,
+            emailVerificationToken,
+            emailVerificationTokenExp,
+            passwordResetToken,
+            passwordResetTokenExp,
+            failedLoginAttempts,
+            lockedUntil,
+            mfaEnabled,
+            mfaCode,
+            mfaCodeExp,
+            createdAt,
+            updatedAt,
+        } = userObj;
+
         return new User({
             id,
             firstName,
@@ -120,8 +261,19 @@ export class User {
             email,
             password,
             isOrganiser,
+            emailVerified: emailVerified ?? false,
+            emailVerificationToken: emailVerificationToken ?? undefined,
+            emailVerificationTokenExp: emailVerificationTokenExp ?? undefined,
+            passwordResetToken: passwordResetToken ?? undefined,
+            passwordResetTokenExp: passwordResetTokenExp ?? undefined,
+            failedLoginAttempts: failedLoginAttempts ?? 0,
+            lockedUntil: lockedUntil ?? undefined,
+            mfaEnabled: mfaEnabled ?? false,
+            mfaCode: mfaCode ?? undefined,
+            mfaCodeExp: mfaCodeExp ?? undefined,
             createdAt,
             updatedAt,
         });
     }
 }
+
