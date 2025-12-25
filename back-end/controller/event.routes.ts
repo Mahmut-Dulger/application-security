@@ -64,6 +64,7 @@
  */
 import express, { NextFunction, Request, Response } from 'express';
 import eventService from '../service/event.service';
+import { logger, logSecurityEvent } from '../util/logger';
 
 const eventRouter = express.Router();
 
@@ -222,6 +223,7 @@ eventRouter.post('/', async (req: Request, res: Response, next: NextFunction) =>
         const auth = (req as any).auth;
 
         if (!auth || !auth.userId) {
+            logger.warn({ url: req.url }, '🔓 Unauthorized event creation attempt');
             return res.status(401).json({ message: 'Authentication required' });
         }
 
@@ -230,8 +232,17 @@ eventRouter.post('/', async (req: Request, res: Response, next: NextFunction) =>
         const user = await userService.getUserById({ id: auth.userId });
 
         if (!user || !user.getIsOrganiser()) {
+            logSecurityEvent('PRIVILEGE_ESCALATION', {
+                userId: auth.userId,
+                reason: 'Non-organiser attempted to create experience',
+            });
             return res.status(401).json({ message: 'Only organisers can create experiences' });
         }
+
+        logger.info(
+            { userId: auth.userId, eventName: name, organiser: user.getFullName() },
+            '✨ Creating new experience'
+        );
 
         const event = await eventService.createEvent({
             name,
@@ -241,8 +252,10 @@ eventRouter.post('/', async (req: Request, res: Response, next: NextFunction) =>
             organiserId: user.getId(),
         });
 
+        logger.info({ eventId: event.getId(), organiser: user.getId() }, '✅ Experience created');
         res.status(201).json(event);
     } catch (error) {
+        logger.error({ error: error instanceof Error ? error.message : 'Unknown error' }, '❌ Error creating experience');
         next(error);
     }
 });

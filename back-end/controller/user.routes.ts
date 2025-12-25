@@ -84,6 +84,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 import userService from '../service/user.service';
 import { UserInput } from '../types/index';
+import { logger, logSecurityEvent } from '../util/logger';
 
 const userRouter = express.Router();
 
@@ -179,8 +180,14 @@ userRouter.post('/login', loginLimiter, async (req: Request, res: Response, next
  */
 userRouter.post('/logout', (req: Request, res: Response) => {
     const token = req.headers.authorization?.split(' ')[1];
+    const userId = (req as any).auth?.userId;
+    
     if (token) {
         tokenBlacklist.add(token);
+        logSecurityEvent('LOGOUT', {
+            userId,
+        });
+        logger.info({ userId }, '👋 User logged out');
     }
     res.status(200).json({ message: 'Logged out successfully' });
 });

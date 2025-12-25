@@ -9,8 +9,16 @@ import { tripRouter } from './controller/trip.routes';
 import { eventRouter } from './controller/event.routes';
 import { userRouter, tokenBlacklist } from './controller/user.routes';
 import helmet from 'helmet';
+import { httpLogger, logger } from './util/logger';
 
 const app = express();
+
+// JSON logging middleware (must be first)
+app.use(httpLogger);
+
+// Log startup
+logger.info('🚀 Starting Travel Booking API with Pino JSON logging...');
+
 app.use(helmet());
 
 app.use(
@@ -109,16 +117,28 @@ const swaggerSpec = swaggerJSDoc(swaggerOpts);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    const requestId = (req as any).id;
+    
     if (err.name === 'UnauthorizedError') {
+        logger.warn({ requestId, error: err.message }, '🔓 Unauthorized request');
         res.status(401).json({ status: 'unauthorized', message: err.message });
     } else if (err.name === 'TravelBookingError') {
+        logger.error({ requestId, error: err.message }, '❌ Domain error');
         res.status(400).json({ status: 'domain error', message: err.message });
     } else {
+        logger.error({ requestId, error: err.message, stack: err.stack }, '🚨 Application error');
         res.status(400).json({ status: 'application error', message: err.message });
     }
 });
 
 app.listen(port || 3000, () => {
-    console.log(`Travel Booking API is running on port ${port}.`);
+    logger.info(
+        {
+            port: port || 3000,
+            environment: process.env.NODE_ENV || 'development',
+            timestamp: new Date().toISOString(),
+        },
+        '✅ Travel Booking API listening on port'
+    );
 });
 
