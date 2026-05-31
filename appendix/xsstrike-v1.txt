@@ -1,0 +1,20 @@
+
+	XSStrike v3.1.5
+
+ Crawling the target 
+ Parsing                                           Parsing en/login                                  Progress: 2/2 
+
+	XSStrike v3.1.5
+
+ Checking for DOM vulnerabilities 
+ WAF detected: ChinaCache (ChinaCache Networks) 
+ Testing parameter: firstName 
+ No reflection found 
+ Testing parameter: lastName 
+ No reflection found 
+ Testing parameter: email 
+ No reflection found 
+ Testing parameter: password 
+ No reflection found 
+ Testing parameter: isOrganiser 
+ No reflection found 
