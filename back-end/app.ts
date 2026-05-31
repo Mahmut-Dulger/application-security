@@ -19,7 +19,17 @@ app.use(httpLogger);
 // Log startup
 logger.info('🚀 Starting Travel Booking API with Pino JSON logging...');
 
+// Hide X-Powered-By header
+app.disable('x-powered-by');
+
 app.use(helmet());
+
+// HSTS - Force HTTPS (adjust maxAge for production)
+app.use(helmet.hsts({
+    maxAge: 31536000, // 1 year in seconds
+    includeSubDomains: true,
+    preload: true
+}));
 
 app.use(
     helmet.contentSecurityPolicy({

@@ -424,7 +424,7 @@ userRouter.post('/reset-password', passwordResetLimiter, async (req: Request, re
  */
 userRouter.post('/change-password', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = (req as any).auth?.userId;
+        const userId = (req as { auth?: { userId?: number } }).auth?.userId;
         if (!userId) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
@@ -471,7 +471,7 @@ userRouter.post('/change-password', async (req: Request, res: Response, next: Ne
  */
 userRouter.post('/verify-change-password', mfaLimiter, async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = (req as any).auth?.userId;
+        const userId = (req as { auth?: { userId?: number } }).auth?.userId;
         if (!userId) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
@@ -505,7 +505,7 @@ userRouter.post('/verify-change-password', mfaLimiter, async (req: Request, res:
  */
 userRouter.post('/remember-me', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = (req as any).auth?.userId;
+        const userId = (req as { auth?: { userId?: number } }).auth?.userId;
         if (!userId) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
@@ -567,7 +567,7 @@ userRouter.post('/login-with-token', async (req: Request, res: Response, next: N
 userRouter.post('/logout', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
-        const userId = (req as any).auth?.userId;
+        const userId = (req as { auth?: { userId?: number } }).auth?.userId;
 
         if (token) {
             tokenBlacklist.add(token);

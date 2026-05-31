@@ -62,35 +62,81 @@ const UserLoginForm: React.FC = () => {
     if (!validate()) {
       return;
     }
-    const credentials = { email, password };
-    const response = await UserService.loginUser(credentials);
 
-    if (response.status === 200) {
-      setStatusMessages([{ message: t("login.success"), type: "success" }]);
-      const user = await response.json();
-      sessionStorage.setItem(
-        "loggedInUser",
-        JSON.stringify({
-          id: user.id,
-          token: user.token,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          role: user.role,
-        })
-      );
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
-    } else if (response.status === 401) {
-      const { errorMessage } = await response.json();
-      setStatusMessages([{ message: errorMessage, type: "error" }]);
-    } else {
-      setStatusMessages([
-        {
-          message: t("general.error"),
+    try {
+      const credentials = { email, password };
+      const response = await UserService.loginUser(credentials);
+
+      if (response.status === 200) {
+        setStatusMessages([{ message: "Login successful! Redirecting...", type: "success" }]);
+        const user = await response.json();
+        sessionStorage.setItem(
+          "loggedInUser",
+          JSON.stringify({
+            id: user.id,
+            token: user.token,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+          })
+        );
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+      } else if (response.status === 400) {
+        const data = await response.json();
+        const errorMessage = data.message || "";
+        
+        // Handle specific error cases with helpful messages
+        if (errorMessage.includes("verify your email") || errorMessage.includes("Email not verified")) {
+          setStatusMessages([{ 
+            message: "Please verify your email before logging in. Check your inbox for the verification link or request a new one.", 
+            type: "error" 
+          }]);
+        } else if (errorMessage.includes("does not exist")) {
+          setStatusMessages([{ 
+            message: "No account found with this email address. Please check your email or sign up for a new account.", 
+            type: "error" 
+          }]);
+        } else if (errorMessage.includes("Incorrect password")) {
+          setStatusMessages([{ 
+            message: "Incorrect password. Please try again or reset your password.", 
+            type: "error" 
+          }]);
+        } else if (errorMessage.includes("locked")) {
+          setStatusMessages([{ 
+            message: errorMessage,
+            type: "error" 
+          }]);
+        } else {
+          setStatusMessages([{ 
+            message: errorMessage || "Login failed. Please check your credentials.", 
+            type: "error" 
+          }]);
+        }
+      } else if (response.status === 401) {
+        const data = await response.json();
+        setStatusMessages([{ 
+          message: data.message || "Invalid email or password. Please try again.", 
+          type: "error" 
+        }]);
+      } else if (response.status === 429) {
+        setStatusMessages([{ 
+          message: "Too many login attempts. Please try again later.", 
+          type: "error" 
+        }]);
+      } else {
+        const data = await response.json();
+        setStatusMessages([{
+          message: data.message || "An error occurred during login. Please try again.",
           type: "error",
-        },
-      ]);
+        }]);
+      }
+    } catch (error) {
+      setStatusMessages([{
+        message: "Unable to connect to the server. Please check your internet connection and try again.",
+        type: "error",
+      }]);
     }
   };
 
@@ -187,6 +233,18 @@ const UserLoginForm: React.FC = () => {
               className="text-blue-700 hover:underline font-medium"
             >
               Sign up here
+            </button>
+          </p>
+        </div>
+        <div className="row mt-2 text-center">
+          <p className="text-sm text-gray-600">
+            Need to verify your email?{" "}
+            <button
+              type="button"
+              onClick={() => router.push("/verify-email")}
+              className="text-blue-700 hover:underline font-medium"
+            >
+              Verify here
             </button>
           </p>
         </div>

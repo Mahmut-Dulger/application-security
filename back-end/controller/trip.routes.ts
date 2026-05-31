@@ -74,7 +74,7 @@ const tripRouter = express.Router();
  *                   type: string
  *                   example: "Database error. See server log for details."
  */
-tripRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
+tripRouter.get('/', async (req: Request, res: Response) => {
     try {
         const trips = await tripService.getAllTrips();
         res.status(200).json(trips);

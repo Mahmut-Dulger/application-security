@@ -131,17 +131,70 @@ const UserSignupForm: React.FC = () => {
       });
 
       if (response.status === 201) {
-        setStatusMessages([{ message: t("signup.success"), type: "success" }]);
+        const data = await response.json();
+        setStatusMessages([{ 
+          message: data.message || "Account created successfully! Please check your email to verify your account.", 
+          type: "success" 
+        }]);
         // Redirect to email verification page
         setTimeout(() => {
           router.push(`/verify-email?email=${encodeURIComponent(email)}`);
         }, 2000);
+      } else if (response.status === 400) {
+        const data = await response.json();
+        const errorMessage = data.message || t("general.error");
+        
+        // Handle specific error cases with user-friendly messages
+        if (errorMessage.includes("already registered") || errorMessage.includes("Email already")) {
+          setStatusMessages([{ 
+            message: "This email is already registered. Please use a different email or try logging in.", 
+            type: "error" 
+          }]);
+        } else if (errorMessage.includes("Password must be at least")) {
+          setStatusMessages([{ 
+            message: "Password must be at least 12 characters long.", 
+            type: "error" 
+          }]);
+        } else if (errorMessage.includes("uppercase")) {
+          setStatusMessages([{ 
+            message: "Password must contain at least one uppercase letter.", 
+            type: "error" 
+          }]);
+        } else if (errorMessage.includes("lowercase")) {
+          setStatusMessages([{ 
+            message: "Password must contain at least one lowercase letter.", 
+            type: "error" 
+          }]);
+        } else if (errorMessage.includes("number")) {
+          setStatusMessages([{ 
+            message: "Password must contain at least one number.", 
+            type: "error" 
+          }]);
+        } else if (errorMessage.includes("special character")) {
+          setStatusMessages([{ 
+            message: "Password must contain at least one special character (!@#$%^&*).", 
+            type: "error" 
+          }]);
+        } else if (errorMessage.includes("email address")) {
+          setStatusMessages([{ 
+            message: "Password must not contain your email address.", 
+            type: "error" 
+          }]);
+        } else {
+          setStatusMessages([{ message: errorMessage, type: "error" }]);
+        }
       } else {
         const data = await response.json();
-        setStatusMessages([{ message: data.message || t("general.error"), type: "error" }]);
+        setStatusMessages([{ 
+          message: data.message || "An error occurred during signup. Please try again.", 
+          type: "error" 
+        }]);
       }
     } catch (error) {
-      setStatusMessages([{ message: t("general.error"), type: "error" }]);
+      setStatusMessages([{ 
+        message: "Unable to connect to the server. Please check your internet connection and try again.", 
+        type: "error" 
+      }]);
     }
   };
 

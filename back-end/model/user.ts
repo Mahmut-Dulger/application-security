@@ -232,6 +232,30 @@ export class User {
         );
     }
 
+    /**
+     * Controls JSON serialisation when this User is returned in an API response
+     * (e.g. as the `organiser` field on an Event or Trip, or in `attendees`).
+     *
+     * `JSON.stringify` (and therefore Express's `res.json`) automatically calls
+     * this method when present. TypeScript's `private` keyword is compile-time
+     * only and does NOT prevent serialisation, so without this method the
+     * stored bcrypt password hash and internal account-security state
+     * (emailVerificationToken, passwordResetToken, mfaCode, mfaEnabled,
+     * failedLoginAttempts, lockedUntil, ...) would all leak to clients.
+     *
+     * Only safe, public fields are exposed here.
+     */
+    toJSON() {
+        return {
+            id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            isOrganiser: this.isOrganiser,
+            createdAt: this.createdAt,
+        };
+    }
+
     static from(userObj: any): User {
         const {
             id,

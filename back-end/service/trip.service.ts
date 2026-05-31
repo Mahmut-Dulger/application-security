@@ -1,7 +1,5 @@
 import tripDB from '../repository/trip.db';
-import userDB from '../repository/user.db';
 import { Trip } from '../model/trip';
-import { User } from '../model/user';
 
 const getAllTrips = async (): Promise<Trip[]> => tripDB.getAllTrips();
 

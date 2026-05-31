@@ -1,7 +1,6 @@
 import eventDB from '../repository/event.db';
 import userDB from '../repository/user.db';
 import { Event } from '../model/event';
-import { User } from '../model/user';
 
 const getAllEvents = async (): Promise<Event[]> => {
     return eventDB.getAllEvents();
