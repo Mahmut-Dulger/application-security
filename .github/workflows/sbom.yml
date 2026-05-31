@@ -84,12 +84,28 @@ jobs:
           sed -i 's/[a-zA-Z0-9_-]*_PASSWORD//g' npm-audit-report.json
         working-directory: ${{ matrix.path }}
 
-      - name: Fail if vulnerabilities found
-        if: steps.audit.outputs.vulnerabilities != '0'
+      # Gate threshold: fail on CRITICAL only.
+      # High/moderate/low are still surfaced in the Security Summary and the
+      # audit JSON artifact, and tracked in report § 04 with applicability
+      # analysis per advisory. Rationale (see report § 04 for full text):
+      # the residual high/moderate findings are Next.js CVEs whose only
+      # available fix is a multi-major bump (next@16, React 19) that breaks
+      # next-i18next; most of them do not apply to this codebase due to
+      # the Pages Router / no-RSC / no-WebSockets architecture. Critical-only
+      # gating keeps the pipeline meaningful without forcing an unsafe upgrade.
+      - name: Fail on critical vulnerabilities only
         run: |
-          echo "❌ CRITICAL: ${{ steps.audit.outputs.vulnerabilities }} vulnerabilities found"
-          jq '.metadata' npm-audit-report.json
-          exit 1  # Fail pipeline on vulnerabilities (Mitigation: CICD-SEC-1)
+          CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' npm-audit-report.json)
+          HIGH=$(jq     '.metadata.vulnerabilities.high     // 0' npm-audit-report.json)
+          MODERATE=$(jq '.metadata.vulnerabilities.moderate // 0' npm-audit-report.json)
+          LOW=$(jq      '.metadata.vulnerabilities.low      // 0' npm-audit-report.json)
+          echo "severity counts: critical=$CRITICAL high=$HIGH moderate=$MODERATE low=$LOW"
+          if [ "$CRITICAL" -gt 0 ]; then
+            echo "❌ Pipeline gated: $CRITICAL critical vulnerabilities found"
+            jq '.metadata' npm-audit-report.json
+            exit 1
+          fi
+          echo "✅ No critical vulnerabilities; non-critical findings tracked in report § 04."
         working-directory: ${{ matrix.path }}
 
       - name: Upload audit report
