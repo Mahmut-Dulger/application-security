@@ -187,12 +187,29 @@ const resendVerificationEmail = async ({ email }: { email: string }): Promise<{ 
  * Threat mitigated: Failed login tracking, account lockout after multiple attempts, MFA
  */
 const authenticate = async ({ email, password }: UserInput): Promise<AuthenticationResponse> => {
+    // SECURITY: anti-enumeration. To prevent attackers from learning which
+    // emails are registered, the same generic message is returned for
+    // "no such user" and "wrong password". The bcrypt.compare is also
+    // executed in the no-such-user path against a fixed dummy hash so the
+    // response time does not leak the user's existence either.
+    const INVALID_CREDENTIALS = 'Invalid email or password.';
+    // bcrypt hash of a long random string, generated once. Never matches a real password.
+    const DUMMY_HASH = '$2b$10$C6UzMDM.H6dfI/f/IKxGhuB1G6dwO2vYTl3yL0jhB3jQ4XwQ9c2P2';
+
     try {
-        const user = await getUserByEmail({ email });
+        const user = await userDB.getUserByEmail({ email });
+
+        if (!user) {
+            // Equalise timing with the real bcrypt.compare branch below
+            await bcrypt.compare(password, DUMMY_HASH);
+            logSecurityEvent('LOGIN_FAILED', { email, reason: 'No such user' });
+            throw new Error(INVALID_CREDENTIALS);
+        }
 
         // Check if email is verified
         if (!user.getEmailVerified()) {
             logSecurityEvent('LOGIN_FAILED', {
+                userId: user.getId(),
                 email,
                 reason: 'Email not verified',
             });
@@ -222,7 +239,7 @@ const authenticate = async ({ email, password }: UserInput): Promise<Authenticat
             if (newAttempts >= MAX_ATTEMPTS) {
                 lockedUntil = new Date();
                 lockedUntil.setMinutes(lockedUntil.getMinutes() + LOCKOUT_DURATION_MINUTES);
-                
+
                 logSecurityEvent('ACCOUNT_LOCKED', {
                     userId: user.getId(),
                     email,
@@ -246,7 +263,7 @@ const authenticate = async ({ email, password }: UserInput): Promise<Authenticat
                 throw new Error('Too many failed login attempts. Your account has been locked for 30 minutes.');
             }
 
-            throw new Error('Incorrect password.');
+            throw new Error(INVALID_CREDENTIALS);
         }
 
         // Reset failed login attempts on successful authentication

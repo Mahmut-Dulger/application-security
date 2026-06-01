@@ -76,12 +76,35 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     next();
 });
 
+// Fail-fast on missing JWT_SECRET — never silently fall back to a known default
+if (!process.env.JWT_SECRET) {
+    logger.error('JWT_SECRET is not set. Refusing to start.');
+    throw new Error('JWT_SECRET is required');
+}
+
 app.use(
     expressjwt({
-        secret: process.env.JWT_SECRET || 'default_secret',
+        secret: process.env.JWT_SECRET,
         algorithms: ['HS256'],
     }).unless({
-        path: ['/api-docs', /^\/api-docs\/.*/, '/users/login', '/users/logout', '/users/signup', '/users/verify-email', '/users/resend-verification', '/users/forgot-password', '/users/reset-password', '/status', '/trips', /^\/trips\/.*/],
+        // Pre-authentication endpoints (must be reachable without a JWT):
+        //   login, signup, email verification (+ resend), password reset (forgot + reset),
+        //   MFA verification (post-password, pre-token), remember-me login.
+        // Logout is intentionally NOT in this list so the JWT middleware
+        // populates req.auth and remember-me tokens get revoked server-side.
+        path: [
+            '/api-docs', /^\/api-docs\/.*/,
+            '/users/login',
+            '/users/signup',
+            '/users/verify-email',
+            '/users/resend-verification',
+            '/users/forgot-password',
+            '/users/reset-password',
+            '/users/verify-mfa',
+            '/users/login-with-token',
+            '/status',
+            '/trips', /^\/trips\/.*/,
+        ],
     })
 );
 

@@ -11,10 +11,12 @@ class TokenGenerator {
     }
 
     /**
-     * Generate a 6-digit MFA code
+     * Generate a 6-digit MFA code using a cryptographically secure RNG.
+     * crypto.randomInt is uniform over [min, max) and backed by the same
+     * CSPRNG as randomBytes, unlike Math.random which is predictable.
      */
     generateMFACode(): string {
-        return Math.floor(100000 + Math.random() * 900000).toString();
+        return crypto.randomInt(100000, 1000000).toString();
     }
 
     /**

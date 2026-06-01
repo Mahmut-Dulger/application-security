@@ -169,14 +169,18 @@ const mfaLimiter = rateLimit({
 userRouter.post('/signup', signupLimiter, async (req: Request, res: Response, next: NextFunction) => {
     try {
         logger.info('📝 Signup request received');
-        const { firstName, lastName, email, password, isOrganiser } = req.body;
+        // SECURITY: any isOrganiser flag in the request body is ignored.
+        // New accounts are always created as clients; the organiser role
+        // is privileged (can create experiences) and must be granted
+        // server-side, not by the client.
+        const { firstName, lastName, email, password } = req.body;
         logger.info({ email }, '🔄 Processing signup...');
         const response = await userService.signup({
             firstName,
             lastName,
             email,
             password,
-            isOrganiser: isOrganiser ?? false,
+            isOrganiser: false,
         });
         logger.info({ email }, '✅ Signup successful');
         res.status(201).json(response);
