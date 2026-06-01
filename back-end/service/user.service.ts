@@ -11,7 +11,7 @@ import tokenGenerator from '../util/token.generator';
 const getUserByEmail = async ({ email }: { email: string }): Promise<User> => {
     const user = await userDB.getUserByEmail({ email });
     if (!user) {
-        logger.warn({ email }, '❌ Login attempt for non-existent user');
+        logger.warn({ email }, ' Login attempt for non-existent user');
         throw new Error(`User with email: ${email} does not exist.`);
     }
     return user;
@@ -83,7 +83,7 @@ const signup = async ({
         // Send verification email (non-blocking - fire and forget)
         emailService.sendVerificationEmail(email, verificationToken, firstName)
             .catch((err: any) => {
-                logger.error({ email, error: err instanceof Error ? err.message : 'Unknown error' }, '📧 Failed to send verification email');
+                logger.error({ email, error: err instanceof Error ? err.message : 'Unknown error' }, ' Failed to send verification email');
                 // Email failure is not critical - user can still verify later or request resend
             });
 
@@ -187,11 +187,7 @@ const resendVerificationEmail = async ({ email }: { email: string }): Promise<{ 
  * Threat mitigated: Failed login tracking, account lockout after multiple attempts, MFA
  */
 const authenticate = async ({ email, password }: UserInput): Promise<AuthenticationResponse> => {
-    // SECURITY: anti-enumeration. To prevent attackers from learning which
-    // emails are registered, the same generic message is returned for
-    // "no such user" and "wrong password". The bcrypt.compare is also
-    // executed in the no-such-user path against a fixed dummy hash so the
-    // response time does not leak the user's existence either.
+
     const INVALID_CREDENTIALS = 'Invalid email or password.';
     // bcrypt hash of a long random string, generated once. Never matches a real password.
     const DUMMY_HASH = '$2b$10$C6UzMDM.H6dfI/f/IKxGhuB1G6dwO2vYTl3yL0jhB3jQ4XwQ9c2P2';
@@ -280,7 +276,7 @@ const authenticate = async ({ email, password }: UserInput): Promise<Authenticat
                 expiresAt: mfaCodeExp,
             });
 
-            // Send MFA email (non-blocking - fire and forget)
+            // Send MFA email 
             emailService.sendMFAEmail(user.getEmail(), mfaCode, user.getFirstName())
                 .catch((err: any) => {
                     logger.error({ email: user.getEmail(), error: err instanceof Error ? err.message : 'Unknown error' }, '📧 Failed to send MFA email');
