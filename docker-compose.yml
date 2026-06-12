@@ -1,0 +1,14 @@
+
+# Usage:
+#   docker compose up -d            # start MailHog in the background
+#   open http://localhost:8025      # webui every mail the app sends shows up here
+#   docker compose down             # stop and remove the container
+
+services:
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: travel-booking-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  #  smptpnodemailer in the back-end sends here
+      - "8025:8025"  # Web UI http://localhost:8025
